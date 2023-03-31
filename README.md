@@ -71,3 +71,24 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+## Prerequisites
+
+### Neo4j
+
+This project uses Neo4j as the graph database. To set up the local development environment for Neo4j, please follow the instructions in the [VertNeo4j repository](https://github.com/AkhrHysd/VertNeo4j).
+
+### Ethereum
+
+This project interacts with an Ethereum blockchain. To set up the local development environment for Ethereum, please follow the instructions in the [vert-sns repository](https://github.com/AkhrHysd/vert-sns).
+
+## Setting Up the Local Development Environment
+
+1. Clone this repository.
+2. Run `npm install` to install the required dependencies.
+3. Copy the `.env.example` file to a new file named `.env` and update the configuration values as needed.
+4. Make sure the Neo4j and Ethereum development environments are running.
+5. Run `npm run start:dev` to start the development server.
+
+The API will be available at `http://localhost:3000`.

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import type { User } from './user.entity';
 import { Neo4jService } from 'src/neo4j/neo4j.service';
 import { Web3Service } from 'src/web3/web3.service';
@@ -41,19 +41,48 @@ export class UserService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    // ここに全てのユーザーを取得するロジックを実装する
-  }
-
   async findOne(id: string): Promise<User> {
-    // 特定ユーザー取得
+    const session = this.neo4jService.getReadSession();
+    const result = await session.run('MATCH (u:User {id: $userId}) RETURN u', {
+      id,
+    });
+    session.close();
+
+    if (result.records.length === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return result.records[0].get('u').properties;
   }
 
   async update(id: string, updatedUser: Partial<User>): Promise<User> {
-    // ここにユーザー情報の更新ロジックを実装する
+    const session = this.neo4jService.getWriteSession();
+    const result = await session.run(
+      `
+        MATCH (u:User {id: $userId})
+        SET u += $updateUserData
+        RETURN u
+      `,
+      { id, updatedUser },
+    );
+    session.close();
+
+    if (result.records.length === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return result.records[0].get('u').properties;
   }
 
   async delete(id: string): Promise<void> {
-    // ここにユーザー削除のロジックを実装する
+    const session = this.neo4jService.getWriteSession();
+    const result = await session.run('MATCH (u:User {id: $userId}) DELETE u', {
+      id,
+    });
+    session.close();
+
+    if (result.summary.counters.updates().nodesDeleted === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
   }
 }

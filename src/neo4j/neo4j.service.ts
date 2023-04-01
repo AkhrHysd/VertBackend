@@ -32,6 +32,19 @@ export class Neo4jService implements OnModuleInit {
       defaultAccessMode: session.WRITE,
     });
   }
+  getReadSession(database?: string): Session {
+    return this.driver.session({
+      database,
+      defaultAccessMode: neo4j.session.READ,
+    });
+  }
+
+  getWriteSession(database?: string): Session {
+    return this.driver.session({
+      database,
+      defaultAccessMode: neo4j.session.WRITE,
+    });
+  }
 
   async run(query: string, params?: { [key: string]: any }): Promise<Record[]> {
     const session = this.getSession();

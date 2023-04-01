@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
-import { Driver, Record, session, Session } from 'neo4j-driver';
+import { Driver, Record, Session } from 'neo4j-driver';
 import { ConfigService } from '@nestjs/config';
 import * as neo4j from 'neo4j-driver';
 

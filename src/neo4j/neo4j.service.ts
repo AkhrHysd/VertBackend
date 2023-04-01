@@ -26,12 +26,6 @@ export class Neo4jService implements OnModuleInit {
     return this.driver;
   }
 
-  getSession(database?: string): Session {
-    return this.driver.session({
-      database: database || this.configService.get('NEO4J_DATABASE'),
-      defaultAccessMode: session.WRITE,
-    });
-  }
   getReadSession(database?: string): Session {
     return this.driver.session({
       database,
@@ -46,8 +40,24 @@ export class Neo4jService implements OnModuleInit {
     });
   }
 
-  async run(query: string, params?: { [key: string]: any }): Promise<Record[]> {
-    const session = this.getSession();
+  async runRead(
+    query: string,
+    params?: { [key: string]: any },
+  ): Promise<Record[]> {
+    const session = this.getReadSession();
+    try {
+      const result = await session.run(query, params);
+      return result.records;
+    } finally {
+      session.close();
+    }
+  }
+
+  async runWrite(
+    query: string,
+    params?: { [key: string]: any },
+  ): Promise<Record[]> {
+    const session = this.getWriteSession();
     try {
       const result = await session.run(query, params);
       return result.records;

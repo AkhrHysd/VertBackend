@@ -11,7 +11,7 @@ export class UserService {
   ) {}
 
   async create(user: User): Promise<User> {
-    const session = this.neo4jService.getSession();
+    const session = this.neo4jService.getWriteSession();
     try {
       // Ethereumスマートコントラクトをデプロイ
       // const contractAddress = await this.web3Service.deployContract(user);

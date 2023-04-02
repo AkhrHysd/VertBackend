@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       provide: 'Web3Config',
       useFactory: (configService: ConfigService) => ({
         rpcUrl: configService.get('WEB3_RPC_URL'),
+        contractAddress: configService.get('CONTRACT_ADDRESS'),
       }),
       inject: [ConfigService],
     },

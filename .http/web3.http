@@ -1,0 +1,10 @@
+
+### GetTest
+GET http://localhost:3000/web3/test
+
+### register
+GET http://localhost:3000/web3/sampleUser
+
+
+### deploy
+POST http://localhost:3000/web3/deploy

@@ -1,0 +1,23 @@
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "birthDate": "2000-01-01",
+  "passingDate": "null"
+}
+
+### GetUser
+GET http://localhost:3000/users/testuser
+
+### UpdateUser
+PUT http://localhost:3000/users/testuser
+Content-Type: application/json
+
+{
+  "email": "updateduser@example.com"
+}
+
+### DeleteUser
+DELETE http://localhost:3000/users/testuser

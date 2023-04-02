@@ -10,12 +10,11 @@ export class UserService {
     private readonly web3Service: Web3Service, // Web3Serviceを注入
   ) {}
 
-  async create(user: User): Promise<User> {
+  async create(user: Omit<User, 'contractAddress'>): Promise<User> {
     const session = this.neo4jService.getWriteSession();
     try {
       // Ethereumスマートコントラクトをデプロイ
-      // const contractAddress = await this.web3Service.deployContract(user);
-      const contractAddress = 'x0xdddffffdddsamdfadfa';
+      const contractAddress = await this.web3Service.deployContract();
 
       // Neo4jにユーザーを作成
       const query = `
@@ -23,7 +22,7 @@ export class UserService {
             username: $username,
             email: $email,
             birthDate: $birthDate,
-            departureDate: $departureDate,
+            passingDate: $passingDate,
             contractAddress: $contractAddress
           })
           RETURN u
@@ -43,9 +42,12 @@ export class UserService {
 
   async findOne(id: string): Promise<User> {
     const session = this.neo4jService.getReadSession();
-    const result = await session.run('MATCH (u:User {id: $userId}) RETURN u', {
-      id,
-    });
+    const result = await session.run(
+      'MATCH (u:User {username: $id}) RETURN u',
+      {
+        id,
+      },
+    );
     session.close();
 
     if (result.records.length === 0) {
@@ -59,7 +61,7 @@ export class UserService {
     const session = this.neo4jService.getWriteSession();
     const result = await session.run(
       `
-        MATCH (u:User {id: $userId})
+        MATCH (u:User {id: $id})
         SET u += $updateUserData
         RETURN u
       `,
@@ -76,7 +78,7 @@ export class UserService {
 
   async delete(id: string): Promise<void> {
     const session = this.neo4jService.getWriteSession();
-    const result = await session.run('MATCH (u:User {id: $userId}) DELETE u', {
+    const result = await session.run('MATCH (u:User {id: $id}) DELETE u', {
       id,
     });
     session.close();

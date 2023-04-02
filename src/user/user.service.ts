@@ -40,51 +40,59 @@ export class UserService {
     }
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(contractAddress: string): Promise<User> {
     const session = this.neo4jService.getReadSession();
     const result = await session.run(
-      'MATCH (u:User {username: $id}) RETURN u',
+      'MATCH (u:User {contractAddress: $contractAddress}) RETURN u',
       {
-        id,
+        contractAddress,
       },
     );
     session.close();
 
     if (result.records.length === 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${contractAddress} not found`);
     }
 
     return result.records[0].get('u').properties;
   }
 
-  async update(id: string, updatedUser: Partial<User>): Promise<User> {
+  async update(
+    contractAddress: string,
+    updateUserData: Partial<User>,
+  ): Promise<User> {
     const session = this.neo4jService.getWriteSession();
     const result = await session.run(
       `
-        MATCH (u:User {id: $id})
+        MATCH (u:User {contractAddress: $contractAddress})
         SET u += $updateUserData
         RETURN u
       `,
-      { id, updatedUser },
+      { contractAddress, updateUserData },
     );
     session.close();
 
     if (result.records.length === 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(
+        `User with contractAddress ${contractAddress} not found`,
+      );
     }
 
     return result.records[0].get('u').properties;
   }
 
-  async delete(id: string): Promise<void> {
+  async delete(contractAddress: string): Promise<void> {
     const session = this.neo4jService.getWriteSession();
-    const result = await session.run('MATCH (u:User {id: $id}) DELETE u', {
-      id,
-    });
+    const result = await session.run(
+      'MATCH (u:User {contractAddress: $contractAddress}) DELETE u',
+      {
+        contractAddress,
+      },
+    );
     session.close();
 
     if (result.summary.counters.updates().nodesDeleted === 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${contractAddress} not found`);
     }
   }
 }

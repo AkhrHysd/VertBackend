@@ -9,10 +9,10 @@ Content-Type: application/json
 }
 
 ### GetUser
-GET http://localhost:3000/users/testuser
+GET http://localhost:3000/users/0x532FA5d2f03D8A8D9ec1e14B2F7b01Ef8D85809c
 
 ### UpdateUser
-PUT http://localhost:3000/users/testuser
+PUT http://localhost:3000/users/0x532FA5d2f03D8A8D9ec1e14B2F7b01Ef8D85809c
 Content-Type: application/json
 
 {
@@ -20,4 +20,4 @@ Content-Type: application/json
 }
 
 ### DeleteUser
-DELETE http://localhost:3000/users/testuser
+DELETE http://localhost:3000/users/0x82D0c8b50230b5565EF68a656F8bF75465A1bcd0

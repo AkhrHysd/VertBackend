@@ -36,6 +36,7 @@ export class Web3Service implements OnModuleInit {
   }
 
   async deployContract() {
+    // TODO: サービスイン時にはここは各々のユーザーのFROM_ACCOUNTを動的に取得する必要があります
     const accounts = await this.web3.eth.getAccounts();
     const fromAccount = accounts[0];
     const gasPrice = await this.web3.eth.getGasPrice();
